@@ -1,0 +1,17 @@
+.container-tags {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.input-tags {
+    position: relative;
+}
+
+.input-tags input {
+    padding: 5px;
+}
+
+.add-tags {
+    padding: var(--button-padding);
+}

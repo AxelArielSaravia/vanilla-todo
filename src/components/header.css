@@ -1,0 +1,61 @@
+header {
+    --header-padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-primary);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-index-mid);
+    padding-top: var(--header-padding);
+    padding-bottom: var(--header-padding);
+}
+
+.header-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+}
+
+.header-button:not(.center) {
+    width: 30px;
+    position: absolute;
+}
+
+.header-button.center {
+    width: 40px;
+}
+
+/*
+ * The +5px are the difference between
+ * the header-button.center width and the others header-buttons.
+ */
+.header-button.left {
+    left: calc(var(--header-padding) + 5px);
+}
+
+.header-button.right {
+    right: calc(var(--header-padding) + 5px);
+}
+
+#header_button-theme[data-value="dark"] .icon-sun {
+    display: bock;
+}
+#header_button-theme[data-value="dark"] .icon-moon {
+    display: none;
+}
+#header_button-theme[data-value="light"] .icon-sun {
+    display: none;
+}
+#header_button-theme[data-value="light"] .icon-moon {
+    display: block;
+}
+
+/* desktop */
+@media screen and (min-width: 780px) {
+    #header_button-filter {
+        display: none;
+    }
+}

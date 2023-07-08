@@ -1,0 +1,24 @@
+.modal:not([data-display="0"]) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: var(--color-transitive-2-alpha);
+    z-index: var(--z-index-mid);
+    overflow: auto;
+}
+
+.modal > div {
+    width: 100%;
+    max-width: 380px;
+    background-color: var(--color-primary);
+    border-radius: var(--border-radius-2);
+    position: relative;
+    padding: 10px;
+    margin: 10px;
+}

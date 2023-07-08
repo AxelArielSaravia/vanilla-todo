@@ -1,0 +1,220 @@
+:root {
+    --border-radius-1: 2px;
+    --border-radius-2: 5px;
+    --z-index-low: 1;
+    --z-index-mid: 2;
+    --z-index-high: 3;
+    --button-padding: 2px 4px;
+}
+
+.dark {
+    --color-system-contrast: white;
+    --color-primary: #181616;
+    --color-secondary: #e4d3d3;
+    --color-transitive-1: #2e2929;
+    --color-transitive-2: #464242;
+    --color-transitive-2-alpha: #e4d3d32a;
+    --color-default: var(--color-secondary);
+    --color-purple: #8a5db4;
+    --color-red: #a85757;
+    --color-green: #67ad59;
+    --color-brown: #b3835c;
+    --color-yellow: #a79355;
+    --color-blue: #5866b1;
+    --color-pink: #b65ab1;
+    accent-color: #f7e0e0;
+    color-scheme: dark;
+}
+
+.light {
+    --color-system-contrast: black;
+    --color-primary: #e4d3d3;
+    --color-secondary: #131212;
+    --color-transitive-1: #cfbcbc;
+    --color-transitive-2: #a89999;
+    --color-transitive-2-alpha: #1312122a;
+    --color-default: var(--color-secondary);
+    --color-purple: #53376d;
+    --color-red: #6d3737;
+    --color-green: #406d37;
+    --color-brown: #6d4f37;
+    --color-yellow: #6d6037;
+    --color-blue: #373f6d;
+    --color-pink: #6d376a; 
+    accent-color: #181616;
+    color-scheme: light;
+}
+
+/* change fonts */
+@media screen and (min-width: 400px) {
+    :root {
+        --font-size: 10px;
+    }
+}
+@media screen and (max-width: 399px) {
+    :root {
+        --font-size: 9px;
+    }
+}
+
+/* Normalize and Defaults values */
+
+html {
+    line-height: 1.15;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+a {
+    background-color: transparent;
+}
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+input {
+    overflow: visible;
+}
+
+[type="checkbox"],
+[type="radio"] {
+    padding: 0;
+}
+
+textarea {
+    margin: 0;
+    overflow: auto;
+}
+
+fieldset {
+    display: block;
+    border: unset;
+}
+
+/* Generic Text font size */
+h1,
+h2,
+h3,
+h4 {
+    font-weight: bold;
+}
+
+h3 {
+    font-size: 2em;
+}
+
+h4 {
+    font-size: 1.7em;
+}
+
+p {
+    font-size: 1.5em;
+}
+
+span {
+    font-size: 1.3em;
+}
+
+
+/* Generic Button */
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+    appearance: button;
+    -webkit-appearance: button;
+}
+button {
+    overflow: visible;
+    text-transform: none;
+    border: none;
+    background-color: var(--color-transitive-1);
+    color: var(--color-secondary);
+    cursor: pointer;
+    border-radius: var(--border-radius-2);
+    font-size: unset;
+}
+
+button:hover,
+button:active,
+button:focus {
+    box-shadow: transparent;
+}
+button:active{
+    background-color: var(--color-transitive-2);
+}
+
+[type="text"],
+textarea {
+    background-color: var(--color-primary);
+    border-radius: var(--border-radius-2);
+    border: 1px solid var(--color-transitive-2);
+}
+
+[data-display="0"],
+.display-none {
+    display: none;
+}
+
+.visual-hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+/* radio component */
+.radio {
+    padding: 0 5px;
+    cursor: pointer;
+}
+.radio p {
+    border: 2px solid var(--color-transitive-1);
+    border-radius: var(--border-radius-2);
+    padding: 5px;
+}
+
+.radio input:checked + p {
+    background-color: var(--color-transitive-2);
+    border-color: var(--color-transitive-2);
+}
+
+.section {
+    padding: 10px;
+}
+
+.section h3 {
+    padding: 5px 0;
+}
+
+
+/* hover */
+@media (hover: hover) and (pointer: fine) {
+    button:hover {
+        background-color: var(--color-transitive-2);
+    }
+}
+
+/* hover */
+@media (hover: hover) and (pointer: fine) {
+    /* radio component */
+    .radio p:hover {
+        background-color: var(--color-transitive-1);
+    }
+}

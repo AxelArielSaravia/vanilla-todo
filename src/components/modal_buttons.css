@@ -1,0 +1,22 @@
+.button-complete-parent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 10px;
+}
+
+.button-complete {
+    font-weight: bold;
+    font-size: 1.7em;
+    padding: 5px;
+}
+
+.button-close {
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    position: absolute;
+    right: 10px;
+    width: 30px;
+    padding: 2px;
+}

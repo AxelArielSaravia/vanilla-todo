@@ -1,0 +1,22 @@
+{
+  "name": "vanilla-todo",
+  "version": "0.1.0",
+  "type": "module",
+  "devDependencies": {
+    "@types/web": "^0.0.102",
+    "bun-types": "^0.6.0",
+    "clean-css": "^5.3.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "server": "bun server.js",
+    "build:dev": "NODE_ENV=development bun build.js",
+    "build:prod": "NODE_ENV=production bun build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AxelArielSaravia/vanilla-todo"
+  }
+}

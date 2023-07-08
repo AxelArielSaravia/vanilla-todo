@@ -1,0 +1,29 @@
+.modal-todo-root {
+    --section-padding: 10px;
+    --color: var(--color-secondary)
+}
+.modal-todo.title {
+    padding: var(--section-padding);
+}
+
+.modal-todo h4 {
+    padding-bottom: 5px;
+}
+
+.modal-todo.section-text textarea {
+    width: 100%;
+    max-height: 200px;
+    min-height: 50px;
+    resize: vertical;
+    padding: var(--section-padding);
+}
+
+.modal-todo.section-date div {
+    display: flex;
+    align-items: center;
+}
+
+.button-add {
+    margin-left: 5px;
+    padding: var(--button-padding);
+}

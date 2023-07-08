@@ -1,0 +1,44 @@
+.filter .button-action {
+    margin: 5px;
+    padding: 5px;
+}
+
+.filter .container-status {
+    display: flex;
+    align-items:center;
+    flex-wrap: wrap;
+}
+
+.filter .filter-status .radio {
+    padding: 0 5px 5px;
+}
+
+/* Desktop */
+@media screen and (min-width: 780px) {
+    .section.filter h4 {
+        padding-bottom: 5px;
+    }
+    .filter .filter-color {
+        width: 180px;
+    }
+}
+
+/* mobile */
+@media screen and (max-width: 779px) {
+    .filter .container-actions {
+        display: flex;
+        flex-wrap:wrap;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* mobile range */
+@media screen and (min-width: 400px) and (max-width: 779px) {
+    .filter .filter-status,
+    .filter .filter-color,
+    .filter .filter-tags {
+        display: flex;
+        align-items: center;
+    }
+}
