@@ -96,13 +96,28 @@ console.info("SRC_PATH:", SRC_PATH);
     let html_index = (
         await import("./src/index.html.js")
     )?.default;
-
     if (PRODUCTION_ENV) {
         html_index = HTMLMinify(html_index);
     }
     // create index.html in PUBLIC_PATH
     const public_html_path = path.join(PUBLIC_PATH, "index.html");
     await Bun.write(public_html_path, html_index);
+
+    const OTHER_HTML_FILES = ["404.html"];
+    for (const html_file of OTHER_HTML_FILES) {
+        const read = path.join(SRC_PATH, html_file);
+        const public_file = path.join(PUBLIC_PATH, html_file);
+        if (PRODUCTION_ENV) {
+            const html_string = await Bun.file(read).text();
+            const html_mini = HTMLMinify(html_string);
+            await Bun.write(Bun.file(public_file), html_mini);
+        } else {
+            await Bun.write(
+                Bun.file(public_file),
+                Bun.file(read)
+            );
+        }
+    }
 
     console.info("HTML Build Successful");
 }
