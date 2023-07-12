@@ -24,6 +24,11 @@ const TodosDOM = {
     /**
     @type {{[k: string]: DOMTodo}} */
     todos: {},
+
+    //Warning: The fragment must use inside a function and only be
+    //a temporal buffer for some Elements, once the function ends the
+    //frament must have no childs (thats means you need to call
+    //replaceChildren method to clean it up, or to move the children)
     fragment: document.createDocumentFragment(),
 };
 
@@ -44,14 +49,10 @@ const FilterState = {
     tags: []
 };
 
-const TagsState = {
-    /**
-    @type {{[k: string]: number}} */
-    counter: {},
-    /**
-    @type {Array<string>} */
-    tags: []
-};
+/**
+@type {{[k: string]: number}} */
+const TagsState = {};
+
 const TagsDOM = {
     templateButtonTag: document.getElementById("template_button-tag"),
     templateTodotag: document.getElementById("template_todo-tag"),
@@ -93,29 +94,82 @@ const TodosMethods = {
         TodosDOM.root?.appendChild(DOMTodo);
     },
     /**
-    @type {(olds: Array<string>, news: Array<string>) => number} */
-    compareTodoTags(olds, news) {
-        if (olds.length === 0 && news.length === 0) {
-            return -1;
-        } else if (news.length === 0) {
-            return -2;
-        } else if (olds.length === 0) {
-            return 0;
-        }
-        const min = (
-            olds.length < news.length
-            ? olds.length
-            : news.length
-        );
-        for (let i = 0; i < min; i += 1) {
-            if (olds[i] !== news[i]) {
-                return i;
+    @type {(
+        DOMTodoFooter: HTMLDivElement,
+        todoTags: ref<Array<string>>,
+        newTags: ref<Array<string>>
+    ) => boolean} */
+    editTags(DOMTodoFooter, todoTags, newTags) {
+        if (todoTags.length === 0 && newTags.length === 0) {
+            return false;
+        } else if (newTags.length === 0) {
+            TagsMethods.remove(todoTags);
+            todoTags.length = 0;
+            DOMTodoFooter.setAttribute("data-display", "0");
+            DOMTodoFooter.replaceChildren();
+            return true;
+        } else if (todoTags.length === 0) {
+            TagsMethods.add(newTags);
+            for (let i = 0; i < newTags.length; i += 1) {
+                let ntag = newTags[i];
+                let DOMTodoTag = TagsMethods.createDOMTodoTag(ntag);
+                TodosDOM.fragment.appendChild(DOMTodoTag);
+                todoTags.push(ntag);
             }
+            Element.prototype.replaceChildren.apply(
+                DOMTodoFooter,
+                TodosDOM.fragment.children
+            );
+
+            DOMTodoFooter.setAttribute("data-display", "1");
+            return true;
         }
-        if (olds.length !== news.length) {
-            return min;
+
+        let minLen = (
+            todoTags.length < newTags.length
+            ? todoTags.length
+            : newTags.length
+        );
+        let DOMFChildren = DOMTodoFooter.children;
+        let j = 0;
+        while (j < minLen && todoTags[j] === newTags[j]) {
+            // The index of the child must be always 0,
+            // because the next element in the HTMLCollection
+            // becomes DOMFChildren[0] when we append the
+            // current DOMFChildren[0] to the fragment.
+            TodosDOM.fragment.appendChild(DOMFChildren[0]);
+            j += 1;
         }
-        return -1;
+
+
+        let res = false;
+        if (!(j === minLen && todoTags.length === newTags.length)) {
+            TagsMethods.add(newTags, j);
+            TagsMethods.remove(todoTags, j);
+
+            let DOMTodoTag;
+            for (let i = j; i < newTags.length; i += 1) {
+                let ntag = newTags[i];
+                if (i < todoTags.length) {
+                    DOMTodoTag = DOMFChildren[0];
+                    TagsMethods.editDOMTodoTag(DOMTodoTag, ntag);
+                } else {
+                    DOMTodoTag = TagsMethods.createDOMTodoTag(ntag);
+                }
+                TodosDOM.fragment.appendChild(DOMTodoTag);
+                todoTags[i] = ntag;
+            }
+            if (newTags.length < todoTags.length) {
+                todoTags.length = newTags.length;
+            }
+            res = true;
+        }
+        Element.prototype.replaceChildren.apply(
+            DOMTodoFooter,
+            TodosDOM.fragment.children
+        )
+        DOMTodoFooter.setAttribute("data-display", "1");
+        return res;
     },
     /**
     @type {(
@@ -170,39 +224,10 @@ const TodosMethods = {
             DOMTodo.setAttribute("data-color", color);
         }
         if (tags !== undefined) {
-            const i = TodosMethods.compareTodoTags(todo.tags, tags);
-            if (i === -2) {
-                ischanged = true;
-
-                TagsMethods.remove(todo.tags)
-                todo.tags.length = 0;
-                DOMTodo.footer.replaceChildren();
-            } else if (i !== -1) {
-                ischanged = true;
-
-                TagsMethods.add(tags, i);
-                TagsMethods.remove(tags, i);
-                const fChildren = DOMTodo.footer.children;
-                let DOMTodoTag;
-                for (let j = i; j < tags.length; j += 1) {
-                    todo.tags[j] = tags[j];
-
-                    if (j < todo.tags.length) {
-                        fChildren[j].title = "tag: " + tags[j];
-                        fChildren.firstElementChild.textContent = tags[j];
-                        TodosDOM.fragment.appendChild(fChildren[j]);
-                    } else {
-                        DOMTodoTag = TagsMethods.createDOMTodoTag(tags[j]);
-                        TodosDOM.fragment.appendChild(DOMTodoTag);
-                    }
-                }
-                if (tags.length < todo.tags.length) {
-                    todo.tags.length = tags.length;
-                }
-                Element.prototype.replaceChildren.apply(
-                    DOMTodo.footer,
-                    TodosDOM.fragment.children
-                );
+            const DOMTodoFooter = DOMTodo.footer;
+            let res = TodosMethods.editTags(DOMTodoFooter, todo.tags, tags);
+            if (res) {
+                ischanged = res;
             }
         }
         if (ischanged) {
@@ -456,7 +481,6 @@ const FilterMethods = {
         FilterState.status = status;
         FilterMethods.selectTodos();
     },
-    
     /**
     @type {(color: Colors) => boolean} */
     includeColor(color) {
@@ -525,27 +549,32 @@ const FilterMethods = {
         if (FColors.length > 0) {
             let head = 0;
             for (let i = 0; i < TSSelected.length; i += 1) {
+                let notSelected = true;
                 let id = TSSelected[i];
                 let todo = TodosState.todos[id];
                 for (let j = 0; j < FColors.length; j += 1) {
                     if (todo.color === FColors[j]) {
                         TSSelected[head] = id;
                         head += 1;
+                        notSelected = false;
                         break;
                     }
                 }
-                let DOMTodo = TodosDOM.todos[id];
-                DOMTodo.setAttribute("data-display", "0");
+                if (notSelected) {
+                    let DOMTodo = TodosDOM.todos[id];
+                    DOMTodo.setAttribute("data-display", "0");
+                }
             }
             TSSelected.length = head;
         }
         const Ftags = FilterState.tags;
         if (Ftags.length > 0) {
-            let head = 0;
             let i = 0;
             while (i < Ftags.length && TSSelected.length > 0) {
                 const ftag = Ftags[i];
+                let head = 0;
                 for (let j = 0; j < TSSelected.length; j += 1) {
+                    let notSelected = true;
                     const id = TSSelected[j];
                     const ttags = TodosState.todos[id].tags;
                     for (let k = 0; k < ttags.length; k += 1) {
@@ -553,11 +582,14 @@ const FilterMethods = {
                         if (ttag === ftag) {
                             TSSelected[head] = id;
                             head += 1;
+                            notSelected = false;
                             break;
                         }
                     }
-                    let DOMTodo = TodosDOM.todos[id];
-                    DOMTodo.setAttribute("data-display", "0");
+                    if (notSelected) {
+                        let DOMTodo = TodosDOM.todos[id];
+                        DOMTodo.setAttribute("data-display", "0");
+                    }
                 }
                 TSSelected.length = head;
                 i += 1;
@@ -568,13 +600,60 @@ const FilterMethods = {
             const DOMTodo = TodosDOM.todos[id];
             DOMTodo.setAttribute("data-display", "1");
         }
+    },
+    /**
+    @type {(tag: string) => boolean} */
+    addTag(tag) {
+        if (FilterState.tags.length === 0 || !FilterState.tags.includes(tag)) {
+            const TSSelected = TodosState.selected;
+            let head = 0;
+            for (let i = 0; i < TSSelected.length; i += 1) {
+                let notSelected = true;
+                const id = TSSelected[i];
+                const DOMTodo = TodosDOM.todos[id];
+                const ttags = TodosState.todos[id].tags;
+                for (let k = 0; k < ttags.length; k += 1) {
+                    const ttag = ttags[k];
+                    if (ttag === tag) {
+                        TSSelected[head] = id;
+                        head += 1;
+                        DOMTodo.setAttribute("data-display", "1");
+                        notSelected = false;
+                        break;
+                    }
+                }
+                if (notSelected) {
+                    DOMTodo.setAttribute("data-display", "0");
+                }
+            }
+            TSSelected.length = head;
+            FilterState.tags.push(tag);
+            return true;
+        }
+        return false;
+    },
+    /**
+    @type {(tag: string) => boolean} */
+    removeTag(tag) {
+        let i = FilterState.tags.indexOf(tag);
+        if (i === -1) {
+            return false;
+        }
+        FilterState.tags.copyWithin(
+            i,
+            i + 1,
+            FilterState.tags.length
+        );
+        FilterState.tags.pop();
+        FilterMethods.selectTodos();
+        return true;
     }
 };
 
 const TagsMethods = {
     /**
-    @type {(tag: string) => DOMButtonTag} */
-    createDOMButtonTag(tag) {
+    @type {(tag: string, name?: string) => DOMButtonTag} */
+    createDOMButtonTag(tag, name) {
         const DOMButtonTag = (
             TagsDOM
             .templateButtonTag
@@ -582,11 +661,22 @@ const TagsMethods = {
             .cloneNode(true)
             .firstElementChild
         );
+        TagsMethods.editDOMButtonTag(DOMButtonTag, tag, name);
+        return DOMButtonTag;
+    },
+    /**
+    @type {(
+        DOMButtonTag: DOMButtonTag,
+        tag: string,
+        name?: string
+    ) => undefined} */
+    editDOMButtonTag(DOMButtonTag, tag, name) {
         DOMButtonTag.title = `tag: ${tag}`;
-        DOMButtonTag.name = tag;
+        if (name !== undefined) {
+            DOMButtonTag.name = name;
+        }
         DOMButtonTag.setAttribute("data-value", tag);
         DOMButtonTag.firstElementChild.textContent = tag;
-        return DOMButtonTag;
     },
     /**
     @type {(tag: string) => DOMTodoTag} */
@@ -598,9 +688,15 @@ const TagsMethods = {
             .cloneNode(true)
             .firstElementChild
         );
-        DOMTodoTag.title = "tag: " + tag;
+        DOMTodoTag.title = `tag: ${tag}`;
         DOMTodoTag.firstElementChild.textContent = tag;
         return DOMTodoTag;
+    },
+    /**
+    @type {(DOMTodoTag: DOMTodoTag, tag: string) => undefined} */
+    editDOMTodoTag(DOMTodoTag, tag) {
+        DOMTodoTag.title = `tag: ${tag}`;
+        DOMTodoTag.firstElementChild.textContent = tag;
     },
     /**
     @type {(tags: ref<Array<string>>, i?: maybe<number>) => undefined} */
@@ -611,10 +707,10 @@ const TagsMethods = {
         let tag = "";
         while (i < tags.length) {
             tag = tags[i];
-            if (TagsState.counter[tag] !== undefined) {
-                TagsState.counter[tag] += 1;
+            if (TagsState[tag] !== undefined) {
+                TagsState[tag] += 1;
             } else {
-                TagsState.counter[tag] = 1;
+                TagsState[tag] = 1;
             }
             i += 1;
         }
@@ -628,10 +724,10 @@ const TagsMethods = {
         let tag = "";
         while (i < tags.length) {
             tag = tags[i];
-            if (TagsState.counter[tag] !== undefined) {
-                TagsState.counter[tag] -= 1;
-                if (TagsState.counter[tag] === 0) {
-                    delete TagsState.counter[tag];
+            if (TagsState[tag] !== undefined) {
+                TagsState[tag] -= 1;
+                if (TagsState[tag] === 0) {
+                    delete TagsState[tag];
                 }
             }
             i += 1;

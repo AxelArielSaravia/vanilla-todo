@@ -121,10 +121,7 @@ const html_filter_colors = `
 
 const html_filter_tags = `
 <div class="container-tags">
-    <div
-        id="general_filter-input-tags"
-        class="input-tags"
-    >
+    <div class="input-tags">
         <input
             name="tags_input"
             type="text"
@@ -133,8 +130,15 @@ const html_filter_tags = `
         <fieldset
             name="tags_suggested"
             class="tags-suggested"
-            data-display="0"
+            data-show="0"
         >
+        </fieldset>
+        <fieldset
+            name="no_tags_suggested"
+            class="tags-suggested"
+            data-show="0"
+        >
+            <p>No tags</p>
         </fieldset>
     </div>
 </div>
@@ -161,7 +165,8 @@ const html_general_filter = `
             ${html_filter_tags}
         </section>
         <section
-            class="section tags-selected"
+            id="general_filter-section-selected"
+            class="tags-selected"
             data-display="0"
         >
             <p>Remove tags:</p>

@@ -31,7 +31,7 @@ const html_template_todo = `
             <div class="todo-main">
                 <p></p>
             </div>
-            <div class="todo-footer"></div>
+            <div class="todo-footer" data-display="0"></div>
         </div>
         <div class="right">
             <button

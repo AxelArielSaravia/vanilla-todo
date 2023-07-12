@@ -7,7 +7,8 @@ import {
 import {
     ModalTodoMethods,
     ModalTodoState,
-    ModalTodoDOM
+    ModalTodoDOM,
+    ModalTodoTagsState
 } from "./modal-todo.js";
 
 const DOMTemplateTodo = document.getElementById("template_todo");
@@ -78,11 +79,7 @@ function completeEdit(e) {
         /*changeDate*/ ModalTodoDOM.changeDate.value === "1",
         /*text*/ ModalTodoDOM.text.value,
         /*color*/ ModalTodoDOM.color.value,
-        /*tags*/ (
-            ModalTodoState.selectedChange
-            ? ModalTodoState.tagsSelected
-            : undefined
-        )
+        /*tags*/ ModalTodoTagsState.selected
     );
     ModalTodoMethods.closeTodoModal();
 }
@@ -164,6 +161,7 @@ function createDOMTodo(
     DOMTodo.footer = footer;
 
     if (tags.length > 0) {
+        footer.setAttribute("data-display", "1");
         for (let i = 0; i < tags.length; i += 1) {
             const DOMTodoTag = TagsMethods.createDOMTodoTag(tags[i]);
             footer.appendChild(DOMTodoTag);

@@ -1,7 +1,7 @@
 const CACHE_NAME = "vta";
 const urlsToCache = [
     "/",
-    "/styles.css",
+    "/style.css",
     "/main.js",
     "/icon/512.png"
 ];

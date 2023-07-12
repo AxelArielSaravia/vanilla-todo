@@ -1,7 +1,8 @@
 import {
     ModalTodoMethods,
     ModalTodoDOM,
-    ModalTodoState
+    ModalTodoState,
+    ModalTodoTagsState
 } from "./modal-todo.js";
 import {createTodo} from "./tempate-todo.js";
 
@@ -16,7 +17,7 @@ function completeCreateTodo() {
     createTodo(
         /*text*/ ModalTodoDOM.text.value,
         /*color*/ ModalTodoDOM.color.value,
-        /*tags*/ ModalTodoState.tagsSelected
+        /*tags*/ ModalTodoTagsState.selected
     );
     ModalTodoMethods.closeTodoModal();
 }
@@ -24,18 +25,19 @@ function completeCreateTodo() {
 /**
 @type {OnClickHandler<HTMLButtonElement>} */
 function addButtonOnClick() {
-    ModalTodoMethods.resetTags();
-
-
     ModalTodoDOM.title.textContent = ModalTodoState.CREATE_TITLE;
 
     ModalTodoDOM.text.value = "";
     ModalTodoDOM.color.value = "default";
     ModalTodoDOM.sectionDate.setAttribute("data-display", "0");
+    ModalTodoDOM.sectionSelected.setAttribute("data-display", "0");
+
+    ModalTodoDOM.tagsSuggested.setAttribute("data-show", "0");
 
     ModalTodoDOM.buttonComplete.textContent = "create";
     ModalTodoDOM.buttonComplete.onclick = completeCreateTodo;
 
+    ModalTodoMethods.resetTagsSelected();
     ModalTodoMethods.openTodoModal();
 }
 

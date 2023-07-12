@@ -7,7 +7,7 @@ header {
     background-color: var(--color-primary);
     position: sticky;
     top: 0;
-    z-index: var(--z-index-mid);
+    z-index: var(--z-index-low);
     padding-top: var(--header-padding);
     padding-bottom: var(--header-padding);
 }

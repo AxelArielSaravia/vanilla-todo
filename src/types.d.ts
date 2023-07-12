@@ -26,6 +26,32 @@ type Todo = {
 
 type FilterStatus = "all" | "active" | "completed";
 
+
+type TagsSectionState = {
+    input: string,
+    selected: Array<string>,
+    charSuggested: string,
+    suggested: Array<string>,
+    tempSuggested: Array<string>,
+};
+type DOMTagsSection = {
+    root: DOMModalTodo | DOMFilter,
+    tagsInput: HTMLInputElement,
+    tagsAdd?: HTMLButtonElement,
+    sectionSelected: HTMLDivElement,
+    tagsSuggested: HTMLFieldSetElement & {
+        children: HTMLCollection & {
+            [k: number]: DOMButtonTag
+        }
+    },
+    tagsSelected: HTMLFieldSetElement & {
+        children: HTMLCollection & {
+            [k: number]: DOMButtonTag
+        }
+    },
+    fragment: DocumentFragment
+};
+
 //DOM Definitions
 
 //Todo Item
@@ -92,8 +118,16 @@ interface DOMModalTodo extends HTMLFormElement {
     color: RadioNodeList & {value: Color},
     tags_input: HTMLInputElement,
     tags_add: HTMLButtonElement,
-    tags_suggested: HTMLFieldSetElement,
-    tags_selected: HTMLFieldSetElement,
+    tags_suggested: HTMLFieldSetElement & {
+        children: HTMLCollection & {
+            [k: number]: DOMButtonTag
+        }
+    },
+    tags_selected: HTMLFieldSetElement & {
+        children: HTMLCollection & {
+            [k: number]: DOMButtonTag
+        }
+    },
     button_complete: HTMLButtonElement,
     button_clear: HTMLButtonElement,
 }
@@ -128,6 +162,7 @@ interface DOMFilter extends HTMLFormElement {
     },
     tags_input: HTMLInputElement,
     tags_suggested: HTMLFieldSetElement,
+    no_tags_suggested: HTMLFieldSetElement,
     tags_selected: HTMLFieldSetElement
 }
 
@@ -164,6 +199,7 @@ interface Document {
 
     getElementById(id: "modal_todo-title"): HTMLHeadingElement;
     getElementById(id: "modal_todo-section-date"): HTMLDivElement;
+    getElementById(id: "modal_todo-section-selected"): HTMLDivElement;
     getElementById(id: "modal_todo-button-complete"): HTMLButtonElement;
 
     getElementById(id: "template_todo"): TemplateDOMTodo;
@@ -179,6 +215,7 @@ interface Document {
 
 interface DocumentFragment {
     cloneNode(t?: boolean): DocumentFragment;
+    appendChild: <T extends Node>(c: T) => T;
 }
 
 type AddEventListener<ET extends string, L extends function> = (

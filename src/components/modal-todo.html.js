@@ -119,7 +119,7 @@ const html_todo_tags = `
         <fieldset
             name="tags_suggested"
             class="tags-suggested"
-            data-display="0"
+            data-show="0"
         >
         </fieldset>
     </div>
@@ -173,7 +173,8 @@ const html_modal_todo = `
             ${html_todo_tags}
         </section>
         <section
-            class="section-tags-selected"
+            id="modal_todo-section-selected"
+            class="tags-selected"
             data-display="0"
         >
             <p>Remove tags:</p>

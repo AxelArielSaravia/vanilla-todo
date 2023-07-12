@@ -6,6 +6,7 @@ const html_template_button_tag = `
         title=""
         name=""
         data-value=""
+        data-display="1"
     >
         <span></span>
     </button>

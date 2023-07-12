@@ -166,7 +166,7 @@ textarea {
 
 [data-display="0"],
 .display-none {
-    display: none;
+    display: none !important;
 }
 
 .visual-hidden {

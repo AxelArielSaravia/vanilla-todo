@@ -12,10 +12,11 @@ import {
 
 const index = /*html*/`
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 ${html_head(Bun.env.NODE_ENV === "production")}
 <body class="light">
     <h1 class="visual-hidden">Vanilla Todo App</h1>
+    ${html_modal_init}
     ${html_header}
     <div class="main-body">
         <main id="main"></main>
@@ -24,7 +25,6 @@ ${html_head(Bun.env.NODE_ENV === "production")}
     ${html_footer}
     ${html_modal_todo}
     ${html_modal_filter}
-    ${html_modal_init}
     ${html_template_todo}
     ${html_template_todo_tag}
     ${html_template_button_tag}
