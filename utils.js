@@ -58,15 +58,6 @@ function HTMLMinify(s) {
     return str;
 }
 
-
-/**
-@type {(s: string) => string} */
-function CSSMinify(s) {
-    let str = "";
-
-    return str;
-}
-
 export {
     HTMLMinify
 };

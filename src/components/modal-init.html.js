@@ -24,7 +24,7 @@ const html_modal_init = `
                 <h4>Features:</h4>
                 <ul class="section">
                     <li>
-                        <p>Use <strong>only</strong> HTML, CSS and vanilla JS</p>
+                        <p>Use <strong>only </strong>HTML, CSS and vanilla JS</p>
                     </li>
                     <li>
                         <p>
