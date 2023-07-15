@@ -9,6 +9,7 @@ import {TagsState, TagsMethods} from "./state.js";
     },
     D extends {
         tagsSuggested: HTMLFieldSetElement,
+        noTagsSuggested?: HTMLFieldSetElement,
         fragment: DocumentFragment
     }
 >(
@@ -20,6 +21,7 @@ function createSuggested(value, tagsState, DOM) {
     const tagsSuggested = tagsState.suggested;
     if (value.length === 0) {
         DOM.tagsSuggested.setAttribute("data-show", "0");
+        DOM.noTagsSuggested?.setAttribute("data-show", "0");
         return;
     } else if (value.length === 1) {
         const DOMTSChildren = DOM.tagsSuggested.children;
@@ -61,11 +63,6 @@ function createSuggested(value, tagsState, DOM) {
                 DOM.fragment.children
             );
         }
-        if (tagsSuggested.length > 0) {
-            DOM.tagsSuggested.setAttribute("data-show", "1");
-        } else {
-            DOM.tagsSuggested.setAttribute("data-show", "0");
-        };
         //In this point we are working with what we get in tagsSugested or
         //tempTagsSuggested
     } else if (
@@ -90,11 +87,6 @@ function createSuggested(value, tagsState, DOM) {
         if (head < tagsSuggested.length) {
             tagsSuggested.length = head;
         }
-        if (tagsSuggested.length > 0) {
-            DOM.tagsSuggested.setAttribute("data-show", "1");
-        } else {
-            DOM.tagsSuggested.setAttribute("data-show", "0");
-        };
     } else if (
         tagsState.tempSuggested.length > 0
         && value.length < tagsState.input.length
@@ -116,12 +108,14 @@ function createSuggested(value, tagsState, DOM) {
         if (head < tagsSuggested.length) {
             tagsSuggested.length = head;
         }
-        if (tagsSuggested.length > 0) {
-            DOM.tagsSuggested.setAttribute("data-show", "1");
-        } else {
-            DOM.tagsSuggested.setAttribute("data-show", "0");
-        };
     }
+    if (tagsSuggested.length > 0) {
+        DOM.tagsSuggested.setAttribute("data-show", "1");
+        DOM.noTagsSuggested?.setAttribute("data-show", "0");
+    } else {
+        DOM.tagsSuggested.setAttribute("data-show", "0");
+        DOM.noTagsSuggested?.setAttribute("data-show", "1");
+    };
 }
 
 export {

@@ -29,7 +29,7 @@ const FilterDOM = {
     color: document.getElementById(FILTER_ID).color,
     tagsInput: document.getElementById(FILTER_ID).tags_input,
     tagsSuggested: document.getElementById(FILTER_ID).tags_suggested,
-    noTagsSuggeted: document.getElementById(FILTER_ID).no_tags_suggested,
+    noTagsSuggested: document.getElementById(FILTER_ID).no_tags_suggested,
     sectionSelected: document.getElementById("general_filter-section-selected"),
     tagsSelected: document.getElementById(FILTER_ID).tags_selected,
     //Warning: The fragment must use inside a function and only be
