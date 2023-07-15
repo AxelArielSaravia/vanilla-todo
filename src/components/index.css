@@ -41,7 +41,8 @@ main {
     }
 
     aside#aside_filter {
-        width: 300px;
+        flex-shrink: 0;
+        width: 250px;
         border-left: 2px solid var(--color-transitive-1);
     }
 
