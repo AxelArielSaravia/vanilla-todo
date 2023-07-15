@@ -1,5 +1,13 @@
 header {
+    --button-size: 30px;
+    --button-c-size: calc(var(--button-size) + 10px);
     --header-padding: 10px;
+    /*
+     * The +5px are the difference between
+     * the header-button.center width and the others header-buttons.
+     */
+    --button-align: calc(var(--header-padding) + 5px);
+
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -20,24 +28,20 @@ header {
 }
 
 .header-button:not(.center) {
-    width: 30px;
+    width: var(--button-size);
     position: absolute;
 }
 
 .header-button.center {
-    width: 40px;
+    width: var(--button-c-size);
 }
 
-/*
- * The +5px are the difference between
- * the header-button.center width and the others header-buttons.
- */
 .header-button.left {
-    left: calc(var(--header-padding) + 5px);
+    left: var(--button-align);
 }
 
 .header-button.right {
-    right: calc(var(--header-padding) + 5px);
+    right: var(--button-align);
 }
 
 #header_button-theme[data-value="dark"] .icon-sun {
