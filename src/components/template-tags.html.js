@@ -4,11 +4,10 @@ const html_template_button_tag = `
         class="button-tag"
         type="button"
         title=""
-        name=""
+        data-match="1"
         data-value=""
         data-display="1"
     >
-        <span></span>
     </button>
 </template>
 `;

@@ -18,7 +18,7 @@ const html_filter_actions = `
 `;
 
 const html_filter_status = `
-<div class="container-status">
+<div class="container-status" id="global_filter-status">
     <label class="radio">
         <input
             class="visual-hidden"
@@ -51,7 +51,7 @@ const html_filter_status = `
 `;
 
 const html_filter_colors = `
-<div class="container-color">
+<div class="container-color" id="global_filter-colors">
     <label class="item-color">
         <input
             name="color"

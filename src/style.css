@@ -5,6 +5,11 @@
     --z-index-mid: 2;
     --z-index-high: 3;
     --button-padding: 2px 4px;
+
+    --h3-font-size: 2rem;
+    --h4-font-size: 1.7rem;
+    --p-font-size: 1.5rem;
+    --span-font-size: 1.3rem;
 }
 
 .dark {
@@ -48,12 +53,12 @@
 /* change fonts */
 @media screen and (min-width: 400px) {
     :root {
-        --font-size: 10px;
+        --root-font-size: 10px;
     }
 }
 @media screen and (max-width: 399px) {
     :root {
-        --font-size: 9px;
+        --root-font-size: 9px;
     }
 }
 
@@ -63,6 +68,7 @@ html {
     line-height: 1.15;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
+    font-size: var(--root-font-size);
 }
 
 *,
@@ -113,19 +119,19 @@ h4 {
 }
 
 h3 {
-    font-size: 2em;
+    font-size: var(--h3-font-size);
 }
 
 h4 {
-    font-size: 1.7em;
+    font-size: var(--h4-font-size);
 }
 
 p {
-    font-size: 1.5em;
+    font-size: var(--p-font-size);
 }
 
 span {
-    font-size: 1.3em;
+    font-size: var(--span-font-size);
 }
 
 

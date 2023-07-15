@@ -652,8 +652,8 @@ const FilterMethods = {
 
 const TagsMethods = {
     /**
-    @type {(tag: string, name?: string) => DOMButtonTag} */
-    createDOMButtonTag(tag, name) {
+    @type {(tag: string) => DOMButtonTag} */
+    createDOMButtonTag(tag) {
         const DOMButtonTag = (
             TagsDOM
             .templateButtonTag
@@ -661,22 +661,18 @@ const TagsMethods = {
             .cloneNode(true)
             .firstElementChild
         );
-        TagsMethods.editDOMButtonTag(DOMButtonTag, tag, name);
+        TagsMethods.editDOMButtonTag(DOMButtonTag, tag);
         return DOMButtonTag;
     },
     /**
     @type {(
         DOMButtonTag: DOMButtonTag,
         tag: string,
-        name?: string
     ) => undefined} */
-    editDOMButtonTag(DOMButtonTag, tag, name) {
+    editDOMButtonTag(DOMButtonTag, tag) {
         DOMButtonTag.title = `tag: ${tag}`;
-        if (name !== undefined) {
-            DOMButtonTag.name = name;
-        }
         DOMButtonTag.setAttribute("data-value", tag);
-        DOMButtonTag.firstElementChild.textContent = tag;
+        DOMButtonTag.textContent = tag;
     },
     /**
     @type {(tag: string) => DOMTodoTag} */

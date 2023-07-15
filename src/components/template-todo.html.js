@@ -15,6 +15,7 @@ const html_template_todo = `
                     class="todo-button edit"
                     type="button"
                     title="edit todo"
+                    data-match="edit"
                     data-id=""
                 >
                     <p class="edit">edit</p>
@@ -23,6 +24,7 @@ const html_template_todo = `
                     class="todo-button remove"
                     type="button"
                     title="remove todo"
+                    data-match="remove"
                     data-id=""
                 >
                     ${html_icon_close}
@@ -35,10 +37,11 @@ const html_template_todo = `
         </div>
         <div class="right">
             <button
-                class="todo-button"
+                class="todo-button completed"
                 type="button"
                 aria-label="toggle completed"
                 title="mark as completed"
+                data-match="completed"
                 data-id=""
             >
                 <svg

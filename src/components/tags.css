@@ -7,13 +7,9 @@
 
 .button-tag {
     margin: 2px;
-    padding: 2px;
+    padding: 2px 6px;
+    font-size: var(--span-font-size);
 }
-
-.button-tag span {
-    padding: 0 4px;
-}
-
 
 .input-tags {
     position: relative;

@@ -1,4 +1,11 @@
-import {TagsState, TagsMethods, TodosState} from "./state.js";
+import {
+    TagsState,
+    TagsMethods,
+    TodosState,
+    TodosMethods
+} from "./state.js";
+import {createTodo} from "./tempate-todo.js";
+import {createSuggested} from "./tags-suggested.js";
 
 const ModalTodoState = {
     CREATE: "create",
@@ -8,17 +15,17 @@ const ModalTodoState = {
     editId: "",
 };
 
-/**
-@type {TagsSectionState} */
 const ModalTodoTagsState = {
     input: "",
     /**
     @type {Array<string>} */
     selected: [],
     charSuggested: "",
+    //suggested have the index of tags that exist in tempSuggested
     /**
-    @type {Array<string>} */
+    @type {Array<number>} */
     suggested: [],
+    //allocate all tags that start with charSuggested
     /**
     @type {Array<string>} */
     tempSuggested: [],
@@ -51,18 +58,18 @@ const ModalTodoMethods = {
     @type {(tag: string) => DOMButtonTag} */
     createDOMTagSelected(tag) {
         const DOMTagSelected = (
-            TagsMethods.createDOMButtonTag(tag, `tagse_${tag}`)
+            TagsMethods.createDOMButtonTag(tag)
         );
-        DOMTagSelected.onclick = ModalTodoMethods.removeTag;
+        //DOMTagSelected.onclick = ModalTodoMethods.removeTag;
         return DOMTagSelected;
     },
     /**
     @type {(tag: string) => DOMButtonTag} */
     createDOMTagSuggested(tag) {
         const DOMTagSuggested = (
-            TagsMethods.createDOMButtonTag(tag, `tagsu_${tag}`)
+            TagsMethods.createDOMButtonTag(tag)
         );
-        DOMTagSuggested.onpointerdown = ModalTodoMethods.addSuggestedTag;
+        //DOMTagSuggested.onpointerdown = ModalTodoMethods.addSuggestedTag;
         return DOMTagSuggested;
     },
     /**
@@ -128,13 +135,8 @@ const ModalTodoMethods = {
         ModalTodoDOM.text.focus();
     },
     /**
-    @type {OnClickHandler<HTMLButtonElement>} */
-    removeTag(e) {
-        const tag = e.currentTarget.getAttribute("data-value");
-        e.currentTarget.remove();
-        if (tag === null) {
-            return;
-        }
+    @type {(tag: string) => undefined} */
+    removeTag(tag) {
         const tagsSelected = ModalTodoTagsState.selected;
         let i = tagsSelected.indexOf(tag);
         if (i !== -1) {
@@ -183,153 +185,84 @@ const ModalTodoMethods = {
         ModalTodoMethods.addTag(tag);
     },
     /**
-    @type {OnClickHandler<HTMLButtonElement>} */
-    addSuggestedTag(e) {
-        const tag = e.currentTarget.getAttribute("data-value");
-        ModalTodoMethods.addTag(tag);
-    },
-    /**
     @type {(value: string) => undefined} */
     createSuggested(value) {
-        const tagsSuggested = ModalTodoTagsState.suggested;
-        if (value.length === 0) {
-            ModalTodoDOM.tagsSuggested.setAttribute("data-show", "0");
+        createSuggested(value, ModalTodoTagsState, ModalTodoDOM);
+    },
+    /**
+    @type {() => undefined} */
+    completeEdit() {
+        if (ModalTodoDOM.text.value.length === 0) {
+            //we can not create a new todo
+            //if it has no text
             return;
-        } else if (value.length === 1) {
-            const DOMTSChildren = ModalTodoDOM.tagsSuggested.children;
-            const tempTagsSuggested = ModalTodoTagsState.tempSuggested;
-            if (value === ModalTodoTagsState.charSuggested) {
-                for (let i = 0; i < tempTagsSuggested.length; i += 1) {
-                    tagsSuggested[i] = tempTagsSuggested[i];
-                    DOMTSChildren[i].setAttribute("data-display", "1");
-                }
-            } else {
-                ModalTodoTagsState.charSuggested = value;
-                let i = 0;
-                let oldSuggestedLen = tagsSuggested.length;
-                for (let stag in TagsState) {
-                    if (value === stag[0]) {
-                        let DOMButtonTag;
-                        if (i < oldSuggestedLen) {
-                            DOMButtonTag = DOMTSChildren[0];
-                            TagsMethods.editDOMButtonTag(
-                                DOMButtonTag,
-                                stag,
-                                `tagsu_${stag}`
-                            );
-                            DOMButtonTag.setAttribute("data-display", "1");
-                        } else {
-                            DOMButtonTag = (
-                                ModalTodoMethods.createDOMTagSuggested(stag)
-                            );
-                        }
-                        ModalTodoDOM.fragment.appendChild(DOMButtonTag);
-                        tagsSuggested[i] = stag;
-                        tempTagsSuggested[i] = stag;
-                        i += 1;
-                    }
-                }
-                if (i < tagsSuggested.length) {
-                    tagsSuggested.length = i;
-                }
-                if (i < tempTagsSuggested.length) {
-                    tempTagsSuggested.length = i;
-                }
-                Element.prototype.replaceChildren.apply(
-                    ModalTodoDOM.tagsSuggested,
-                    ModalTodoDOM.fragment.children
-                );
-            }
-            if (tagsSuggested.length > 0) {
-                ModalTodoDOM.tagsSuggested.setAttribute("data-show", "1");
-            } else {
-                ModalTodoDOM.tagsSuggested.setAttribute("data-show", "0");
-            };
-        //In this point we are working with what we get in tagsSugested or
-        //tempTagsSuggested
-        } else if (
-            ModalTodoTagsState.input.length < value.length
-            && tagsSuggested.length > 0
-        ) {
-            const DOMRoot = ModalTodoDOM.root;
-            let head = 0;
-            for (let i = 0; i < tagsSuggested.length; i += 1) {
-                let tagSug = tagsSuggested[i];
-                let DOMButtonTag = DOMRoot[`tagsu_${tagSug}`];
-                if (tagSug.startsWith(value)) {
-                    DOMButtonTag.setAttribute("data-display", "1");
-                    tagsSuggested[head] = tagSug;
-                    head += 1;
-                } else {
-                    DOMButtonTag.setAttribute("data-display", "0");
-                }
-            }
-            if (head < tagsSuggested.length) {
-                tagsSuggested.length = head;
-            }
-            if (tagsSuggested.length > 0) {
-                ModalTodoDOM.tagsSuggested.setAttribute("data-show", "1");
-            } else {
-                ModalTodoDOM.tagsSuggested.setAttribute("data-show", "0");
-            };
-        } else if (
-            ModalTodoTagsState.tempSuggested.length > 0
-            && value.length < ModalTodoTagsState.input.length
-        ) {
-            const DOMTSChildren = ModalTodoDOM.tagsSuggested.children;
-            const tempTagsSuggested = ModalTodoTagsState.tempSuggested;
-            let head = 0;
-            for (let i = 0; i < tempTagsSuggested.length; i += 1) {
-                let tagSug = tempTagsSuggested[i];
-                let DOMButtonTag = DOMTSChildren[i];
-                if (tagSug.startsWith(value)) {
-                    DOMButtonTag.setAttribute("data-display", "1");
-                    tagsSuggested[head] = tagSug;
-                    head += 1;
-                } else {
-                    DOMButtonTag.setAttribute("data-display", "0");
-                }
-            }
-            if (head < tagsSuggested.length) {
-                tagsSuggested.length = head;
-            }
-            if (tagsSuggested.length > 0) {
-                ModalTodoDOM.tagsSuggested.setAttribute("data-show", "1");
-            } else {
-                ModalTodoDOM.tagsSuggested.setAttribute("data-show", "0");
-            };
         }
+        const id = ModalTodoState.editId;
+        TodosMethods.edit(
+            /*id*/ id,
+            /*changeDate*/ ModalTodoDOM.changeDate.value === "1",
+            /*text*/ ModalTodoDOM.text.value,
+            /*color*/ ModalTodoDOM.color.value,
+            /*tags*/ ModalTodoTagsState.selected
+        );
+        ModalTodoMethods.closeTodoModal();
+    },
+    /**
+    @type {(id: string) => undefined} */
+    openEdit(id) {
+        ModalTodoState.editId = id;
+        const todo = TodosState.todos[id];
+
+        ModalTodoMethods.initTagsEdit(todo.tags);
+
+        ModalTodoDOM.title.textContent = ModalTodoState.EDIT_TITLE;
+
+        ModalTodoDOM.sectionDate.setAttribute("data-display", "1");
+        ModalTodoDOM.changeDate.value = "0";
+
+        ModalTodoDOM.text.value = todo.text;
+        ModalTodoDOM.color.value = todo.color;
+
+        //TODO CREATE COMPLETE BUTTON
+        ModalTodoDOM.buttonComplete.textContent = "edit";
+        ModalTodoDOM.buttonComplete.onclick = ModalTodoMethods.completeEdit;
+
+        ModalTodoMethods.openTodoModal();
+    },
+    /**
+    @type {OnClickHandler<HTMLButtonElement>} */
+    completeCreate() {
+        if (ModalTodoDOM.text.value.length === 0) {
+            //we can not create a new todo
+            //if it has no text
+            return;
+        }
+        createTodo(
+            /*text*/ ModalTodoDOM.text.value,
+            /*color*/ ModalTodoDOM.color.value,
+            /*tags*/ ModalTodoTagsState.selected
+        );
+        ModalTodoMethods.closeTodoModal();
+    },
+    /**
+    @type {() => undefined} */
+    openCreate() {
+        ModalTodoDOM.title.textContent = ModalTodoState.CREATE_TITLE;
+
+        ModalTodoDOM.text.value = "";
+        ModalTodoDOM.color.value = "default";
+        ModalTodoDOM.sectionDate.setAttribute("data-display", "0");
+        ModalTodoDOM.sectionSelected.setAttribute("data-display", "0");
+
+        ModalTodoDOM.tagsSuggested.setAttribute("data-show", "0");
+
+        ModalTodoDOM.buttonComplete.textContent = "create";
+        ModalTodoDOM.buttonComplete.onclick = ModalTodoMethods.completeCreate;
+
+        ModalTodoMethods.resetTagsSelected();
+        ModalTodoMethods.openTodoModal();
     }
 };
-
-{ //Initializations
-    const closeButton = document.getElementById("modal_todo-button-close");
-    closeButton.onclick = ModalTodoMethods.closeTodoModal;
-
-    function handleOnkeydown(e) {
-        switch (e.key) {
-            case " ": {
-                e.preventDefault();
-            };break;
-            case "Enter" : {
-                ModalTodoMethods.addInputTag();
-                e.preventDefault();
-            }
-        }
-    }
-
-    const tagsInput = ModalTodoDOM.tagsInput;
-    tagsInput.oninput = function tioi(e) {
-        let value = e.currentTarget.value;
-        ModalTodoMethods.createSuggested(value);
-        ModalTodoTagsState.input = value;
-    };
-    tagsInput.onkeydown = handleOnkeydown;
-
-    const tagsAdd = ModalTodoDOM.tagsAdd;
-    tagsAdd.onclick = ModalTodoMethods.addInputTag;
-    tagsAdd.onkeydown = handleOnkeydown;
-}
 
 export {
     ModalTodoDOM,

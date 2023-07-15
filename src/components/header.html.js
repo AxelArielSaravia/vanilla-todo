@@ -16,7 +16,7 @@ const html_header = `
         ${html_icon_option}
     </button>
     <button
-        id="header_button-add"
+        id="header_button-create"
         class="header-button center"
         type="button"
         title="add a new todo"
